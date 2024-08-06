@@ -1,5 +1,5 @@
 import { HttpException, InternalServerErrorException } from '@nestjs/common';
-import { GraphQLFormattedError } from 'graphql';
+import { GraphQLError, GraphQLFormattedError } from 'graphql';
 import { unwrapResolverError } from '@apollo/server/errors';
 
 export const graphqlFormatError = (
@@ -25,6 +25,13 @@ export const graphqlFormatError = (
           }
         : undefined,
     };
+  }
+
+  if (
+    unwrappedError instanceof GraphQLError &&
+    unwrappedError.extensions?.code !== 'INTERNAL_SERVER_ERROR'
+  ) {
+    return formattedError;
   }
 
   const internalServerErrorException = new InternalServerErrorException(
