@@ -6,6 +6,11 @@ import { UserService } from './user.service';
 export class UserResolver {
   constructor(private readonly userService: UserService) {}
 
+  @Query(() => [User])
+  users(): User[] {
+    return this.userService.getAllUsers();
+  }
+
   @Query(() => User)
   user(@Args('id', { type: () => ID }) id: string): User {
     return this.userService.getUserById(id);
