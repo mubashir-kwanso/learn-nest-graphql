@@ -22,6 +22,10 @@ export class UserService {
     },
   ];
 
+  getAllUsers(): User[] {
+    return this.users;
+  }
+
   getUserById(id: string): User {
     const user = this.users.find((user) => user.id === id);
     if (!user) {
