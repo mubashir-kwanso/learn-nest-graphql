@@ -3,16 +3,18 @@ import {
   Catch,
   ExceptionFilter,
   HttpException,
-  Logger,
 } from '@nestjs/common';
 import { GqlArgumentsHost, GqlContextType } from '@nestjs/graphql';
 import { GraphQLError } from 'graphql';
+import { PinoLogger } from '../logger/pino-logger';
 
 @Catch()
 export class GlobalExceptionFilter implements ExceptionFilter {
-  private readonly logger = new Logger(GlobalExceptionFilter.name);
+  private readonly logger = PinoLogger.createLogger({
+    name: GlobalExceptionFilter.name,
+  });
 
-  catch(exception: any, host: ArgumentsHost) {
+  catch(exception: Error, host: ArgumentsHost) {
     const contextType = host.getType<GqlContextType>();
 
     // If the request is not HTTP or GraphQL, throw the exception as it is
